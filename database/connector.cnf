@@ -4,4 +4,4 @@ password=
 host=127.0.0.1
 database=itunes
 raise_on_warnings=True
-port=3309
+port=3306

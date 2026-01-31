@@ -26,7 +26,7 @@ class View:
         self._page.controls.append(self._title)
 
         #row1
-        self.txtNumAlbumMin = ft.TextField( label="Numero album minimo", width=250)
+        self.txtNumAlbumMin = ft.TextField( label="Numero album minimo", width=250, on_change=self._controller.check_n_album)
         self._btnCreateGraph = ft.ElevatedButton(text="Crea grafo", on_click=self._controller.handle_create_graph )
         row1 = ft.Row([self.txtNumAlbumMin, self._btnCreateGraph],
                       alignment=ft.MainAxisAlignment.CENTER)
@@ -40,9 +40,9 @@ class View:
         self._page.controls.append(row2)
 
         #row3
-        self.txtMaxArtists = ft.TextField( label="Numero massimo artisti", width=300, disabled=True)
-        self.txtMinDuration = ft.TextField( label="Durata minima (minuti)", width=250, disabled=True)
-        self.btnSearchArtists = ft.ElevatedButton(text="Cerca cammino da artista", disabled=True)
+        self.txtMaxArtists = ft.TextField( label="Numero massimo artisti", width=300, disabled=True, on_change=self._controller.check_values_artists)
+        self.txtMinDuration = ft.TextField( label="Durata minima (minuti)", width=250, disabled=True, on_change=self._controller.check_values_durata)
+        self.btnSearchArtists = ft.ElevatedButton(text="Cerca cammino da artista", disabled=True, on_click=self._controller.handle_recursion)
         row3 = ft.Row([self.txtMinDuration, self.txtMaxArtists, self.btnSearchArtists],
                       alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row3)
