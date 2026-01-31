@@ -62,11 +62,8 @@ class Model:
         self.best_path = []
         self.best_score = 0
 
-        # 1. Filtriamo i nodi validi una volta sola all'inizio
-        # Assumiamo che d_min serva a definire quali artisti considerare
         self._nodi_validi = DAO.get_art_validi(d_min)
 
-        # 2. Inizializziamo parziale (assicurati che artista_scelto sia l'oggetto, non l'id)
         id_map = {a.id: a for a in self.G.nodes}
         parziale = [id_map[artista_scelto]]
 
@@ -74,25 +71,28 @@ class Model:
         return self.best_path, self.best_score
 
     def ricorsione(self, parziale, n_art):
-        # CASO BASE: Abbiamo raggiunto la lunghezza desiderata
-        if len(parziale) == n_art:
-            peso_corrente = self._get_score(parziale)
-            if peso_corrente > self.best_score:
-                self.best_score = peso_corrente
-                self.best_path = list(parziale)
-            return  # Termina questo ramo
 
-        # ESPLORAZIONE: usiamo i vicini del grafo
+        if len(parziale) > 1:
+            peso = self._get_score(parziale)
+        else:
+            peso = 0
+
+        #1. Ho fatto meglio di prima?
+        if peso > self.best_score and len(parziale) == n_art:
+            self.best_score = peso
+            self.best_path = list(parziale)
+            print("Ricorsione conclusa")
+
         ultimo = parziale[-1]
+        #2. Che nodi posso esplorare?
+        for nodo in self._nodi_validi:
+            if nodo in self.G.neighbors(ultimo):
+                if nodo not in parziale:
+                    parziale.append(nodo)
+                    self.ricorsione(parziale, n_art)
+                    print("Ricorsione avviata")
+                    parziale.pop()
 
-        # Scorriamo solo i vicini reali nel grafo
-        for vicino in self.G.neighbors(ultimo):
-            # Vincolo 1: Il vicino deve essere tra i nodi validi (se richiesto)
-            # Vincolo 2: Evitiamo cicli (non ripetere nodi)
-            if vicino in self._nodi_validi and vicino not in parziale:
-                parziale.append(vicino)
-                self.ricorsione(parziale, n_art)
-                parziale.pop()  # Backtracking
 
     def _get_score(self, parziale):
         score = 0

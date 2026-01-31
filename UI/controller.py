@@ -96,14 +96,11 @@ class Controller:
 
         self._view.txt_result.controls.clear()
 
-        for i in range(len(path)):
-            nodo = path[i]
-            # Se è il primo nodo non mettiamo la freccia
-            if i == 0:
-                self._view.txt_result.controls.append(ft.Text(f"{nodo.Name}"))
-            else:
-                # Stampiamo anche il peso dell'arco tra il precedente e l'attuale (opzionale)
-                peso_arco = self._model.G[path[i - 1]][path[i]]['weight']
-                self._view.txt_result.controls.append(ft.Text(f" -> (peso: {peso_arco}) -> {nodo.Name}"))
+        self._view.txt_result.controls.append(ft.Text(f"Cammino di peso massimo dall'artista {artista_scelto}."))
+        self._view.txt_result.controls.append(ft.Text(f"Lunghezza percorso: {len(path)}"))
+
+        for p in path:
+            self._view.txt_result.controls.append(ft.Text(f"{p}"))
 
         self._view.update_page()
+

@@ -71,13 +71,15 @@ class DAO:
         result = []
         cursor = conn.cursor(dictionary=True)
         query = """ 
-                select distinct b.artist_id
-                from album b, track t
-                where (t.milliseconds / 60000) > %s
+                select distinct b.artist_id as id, a.name
+                from album b, track t, artist a
+                where a.id = b.artist_id 
+                and (t.milliseconds / 60000) > %s
                 """
         cursor.execute(query, (d_min,))
         for row in cursor:
-            result.append(row["artist_id"])
+            artist = Artist(id=row['id'], name=row['name'])
+            result.append(artist)
         cursor.close()
         conn.close()
         return result
